@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "magitema_ocean:stone_caves",
+    "magitema_ocean:living_caves",
+    "magitema_ocean:abyssal_basin",
+    "magitema_ocean:rocky_seabed"
+  ]
+}

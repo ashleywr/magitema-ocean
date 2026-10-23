@@ -1,0 +1,65 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:netherrack": {
+      "bacteria": "nautec:thermophiles",
+      "biome": "minecraft:is_nether",
+      "chance": 0.4
+    },
+    "minecraft:podzol": {
+      "bacteria": "nautec:methanogens",
+      "biome": "magitema_ocean:marine",
+      "chance": 0.4
+    },
+    "minecraft:sand": {
+      "bacteria": "nautec:halobacteria",
+      "biome": "magitema_ocean:marine",
+      "chance": 0.4
+    },
+    "minecraft:stone": {
+      "bacteria": "nautec:cyanobacteria",
+      "biome": "minecraft:is_ocean",
+      "chance": 0.4
+    },
+    "nautec:abyssal_coral": {
+      "bacteria": "nautec:calciophiles",
+      "biome": "nautec:abyssal",
+      "chance": 0.3
+    },
+    "nautec:budding_prismarine": {
+      "bacteria": "nautec:lithophiles",
+      "biome": "nautec:budding_prismarine_grafting",
+      "chance": 0.3
+    },
+    "nautec:deep_kelp": {
+      "bacteria": "nautec:halotrophs",
+      "biome": "nautec:bioluminescent",
+      "chance": 0.3
+    },
+    "nautec:deep_kelp_plant": {
+      "bacteria": "nautec:halotrophs",
+      "biome": "nautec:bioluminescent",
+      "chance": 0.3
+    },
+    "nautec:glow_polyp": {
+      "bacteria": "nautec:cyanobacteria",
+      "biome": "nautec:bioluminescent",
+      "chance": 0.5
+    },
+    "nautec:luminescent_algae": {
+      "bacteria": "nautec:algaeformers",
+      "biome": "nautec:bioluminescent",
+      "chance": 0.3
+    },
+    "nautec:prismarine_frond": {
+      "bacteria": "nautec:phototrophs",
+      "biome": "nautec:reef",
+      "chance": 0.35
+    },
+    "nautec:vent_tubeworm": {
+      "bacteria": "nautec:sulfurophiles",
+      "biome": "nautec:vents",
+      "chance": 0.25
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "magitema_ocean:deep_salvage",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 52,
+    "separation": 20,
+    "salt": 4219733,
+    "spread_type": "linear"
+  }
+}

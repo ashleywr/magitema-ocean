@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "magitema_ocean:hadal_trench",
+    "magitema_ocean:basalt_ridge",
+    "magitema_ocean:volcanic_slope"
+  ]
+}

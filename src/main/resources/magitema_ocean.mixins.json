@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.sanhiruzu.magitemaocean.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "NoiseChunkMixin",
+    "NoiseGeneratorMixin",
+    "ChunkGeneratorMixin",
+    "OceanPlacedFeatureBiomeFilterMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

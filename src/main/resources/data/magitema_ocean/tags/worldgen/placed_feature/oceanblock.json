@@ -1,0 +1,13 @@
+{
+  "replace": true,
+  "values": [
+    "minecraft:seagrass_deep",
+    "nautec:abyssal_coral",
+    "nautec:deep_kelp",
+    "nautec:prismarine_frond",
+    "minecraft:sea_pickle",
+    "minecraft:warm_ocean_vegetation",
+    "nautec:vent_field",
+    "nautec:vent_tubeworm"
+  ]
+}

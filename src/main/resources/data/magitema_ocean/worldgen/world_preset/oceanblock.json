@@ -1,0 +1,49 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "magitema_ocean:deep_overworld",
+      "generator": {
+        "type": "minecraft:noise",
+        "settings": "magitema_ocean:oceanblock",
+        "biome_source": {
+          "type": "magitema_ocean:marine",
+          "biomes": [
+            "magitema_ocean:hadal_trench",
+            "magitema_ocean:abyssal_basin",
+            "magitema_ocean:basalt_ridge",
+            "magitema_ocean:volcanic_slope",
+            "magitema_ocean:seamount_slope",
+            "magitema_ocean:rocky_seabed",
+            "magitema_ocean:sand_shelf",
+            "magitema_ocean:kelp_grove",
+            "magitema_ocean:coral_garden",
+            "magitema_ocean:sheltered_lagoon",
+            "magitema_ocean:stone_caves",
+            "magitema_ocean:living_caves"
+          ]
+        }
+      }
+    },
+    "minecraft:the_nether": {
+      "type": "minecraft:the_nether",
+      "generator": {
+        "type": "minecraft:noise",
+        "settings": "minecraft:nether",
+        "biome_source": {
+          "type": "minecraft:multi_noise",
+          "preset": "minecraft:nether"
+        }
+      }
+    },
+    "minecraft:the_end": {
+      "type": "minecraft:the_end",
+      "generator": {
+        "type": "minecraft:noise",
+        "settings": "minecraft:end",
+        "biome_source": {
+          "type": "minecraft:the_end"
+        }
+      }
+    }
+  }
+}

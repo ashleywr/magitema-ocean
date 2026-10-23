@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:coal_ore",
+    "minecraft:deepslate_coal_ore",
+    "minecraft:copper_ore",
+    "minecraft:deepslate_copper_ore",
+    "minecraft:iron_ore",
+    "minecraft:deepslate_iron_ore",
+    "minecraft:gold_ore",
+    "minecraft:deepslate_gold_ore",
+    "minecraft:redstone_ore",
+    "minecraft:deepslate_redstone_ore",
+    "minecraft:lapis_ore",
+    "minecraft:deepslate_lapis_ore",
+    "minecraft:diamond_ore",
+    "minecraft:deepslate_diamond_ore",
+    "minecraft:emerald_ore",
+    "minecraft:deepslate_emerald_ore",
+    "create:zinc_ore",
+    "create:deepslate_zinc_ore",
+    "magitech:fluorite_ore",
+    "magitech:deepslate_fluorite_ore",
+    "magitech:tourmaline_ore",
+    "magitech:deepslate_tourmaline_ore",
+    "magitech:zinc_ore",
+    "magitech:deepslate_zinc_ore",
+    "zps:lithium_ore",
+    "zps:deepslate_lithium_ore"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:seagrass_deep",
+    "nautec:reef_budding_prismarine",
+    "nautec:reef_prismarine",
+    "minecraft:sea_pickle",
+    "minecraft:warm_ocean_vegetation"
+  ],
+  "replace": false
+}

@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+version = '0.1.0'
+group = 'com.sanhiruzu.magitemaocean'
+base { archivesName = 'magitema-ocean-1.21.1' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = '21.1.262'
+    runs {
+        server {
+            server()
+            gameDirectory = file('../tests/dev-server')
+            programArgument '--nogui'
+            jvmArgument '-Xmx12G'
+        }
+        client {
+            client()
+            gameDirectory = file('../tests/dev-client')
+        }
+    }
+    mods { magitema_ocean { sourceSet sourceSets.main } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+tasks.register('datapack', Zip) {
+    archiveFileName = "magitema-ocean-data-${project.version}.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+    from('src/main/resources') { include 'data/**'; include 'pack.mcmeta' }
+}
+tasks.named('build') { dependsOn 'datapack' }

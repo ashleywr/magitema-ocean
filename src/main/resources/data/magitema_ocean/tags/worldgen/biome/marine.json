@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "magitema_ocean:hadal_trench",
+    "magitema_ocean:abyssal_basin",
+    "magitema_ocean:basalt_ridge",
+    "magitema_ocean:volcanic_slope",
+    "magitema_ocean:seamount_slope",
+    "magitema_ocean:rocky_seabed",
+    "magitema_ocean:sand_shelf",
+    "magitema_ocean:kelp_grove",
+    "magitema_ocean:coral_garden",
+    "magitema_ocean:sheltered_lagoon"
+  ]
+}
