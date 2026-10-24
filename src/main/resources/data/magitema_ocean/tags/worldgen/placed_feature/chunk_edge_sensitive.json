@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:trees_sparse_jungle",
+    "minecraft:warm_ocean_vegetation",
+    "minecraft:sea_pickle",
+    "minecraft:patch_dead_bush_badlands",
+    "magitema_ocean:vent_cluster"
+  ]
+}

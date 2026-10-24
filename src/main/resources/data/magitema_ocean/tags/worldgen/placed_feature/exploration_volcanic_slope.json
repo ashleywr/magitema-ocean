@@ -1,7 +1,7 @@
 {
   "values": [
     "nautec:abyssal_coral",
-    "nautec:vent_field",
+    "magitema_ocean:vent_cluster",
     "nautec:vent_tubeworm"
   ],
   "replace": false

@@ -3,9 +3,9 @@ package com.sanhiruzu.magitemaocean;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Stream;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -37,13 +37,8 @@ public final class MarineBiomes extends BiomeSource {
     ).apply(i, MarineBiomes::new));
 
     private final List<Holder<Biome>> biomes;
-    private final Map<Long, SurfaceChoice> surfaceChoices = java.util.Collections.synchronizedMap(
-        new LinkedHashMap<>(512, 0.75f, true) {
-            @Override protected boolean removeEldestEntry(Map.Entry<Long, SurfaceChoice> eldest) {
-                return size() > 8192;
-            }
-        }
-    );
+    private final ConcurrentMap<SampleKey, SurfaceChoice> surfaceChoices = new ConcurrentHashMap<>();
+    private final ConcurrentMap<SampleKey, Double> floorSamples = new ConcurrentHashMap<>();
 
     public MarineBiomes(List<Holder<Biome>> biomes) {
         if (biomes.size() != CAVE_BIOMES + 2) {
@@ -71,7 +66,7 @@ public final class MarineBiomes extends BiomeSource {
     }
 
     private SurfaceChoice surfaceChoice(int x, int z, Climate.Sampler sampler) {
-        long key = ((long) x << 32) ^ (z & 0xffffffffL);
+        SampleKey key = new SampleKey(sampler, x, z);
         SurfaceChoice cached = surfaceChoices.get(key);
         if (cached != null) return cached;
 
@@ -115,12 +110,26 @@ public final class MarineBiomes extends BiomeSource {
             biome = SAND_SHELF;
         }
         SurfaceChoice computed = new SurfaceChoice(floor, biome);
-        surfaceChoices.put(key, computed);
-        return computed;
+        return putBounded(surfaceChoices, key, computed, 8192);
     }
 
-    private static double floorAt(Climate.Sampler sampler, int x, int y, int z) {
-        return sampler.continentalness().compute(context(x, y, z));
+    private double floorAt(Climate.Sampler sampler, int x, int y, int z) {
+        SampleKey key = new SampleKey(sampler, x, z);
+        Double cached = floorSamples.get(key);
+        if (cached != null) return cached;
+        double computed = sampler.continentalness().compute(context(x, y, z));
+        return putBounded(floorSamples, key, computed, 32768);
+    }
+
+    private static <T> T putBounded(ConcurrentMap<SampleKey, T> cache, SampleKey key, T value, int maxSize) {
+        T existing = cache.putIfAbsent(key, value);
+        if (cache.size() > maxSize) {
+            // Evict as a batch; read-heavy lookups stay lock-free between rare clears.
+            synchronized (cache) {
+                if (cache.size() > maxSize) cache.clear();
+            }
+        }
+        return existing == null ? value : existing;
     }
 
     private static DensityFunction.SinglePointContext context(int x, int y, int z) {
@@ -128,4 +137,27 @@ public final class MarineBiomes extends BiomeSource {
     }
 
     private record SurfaceChoice(double floor, int biome) {}
+
+    /** Sample keys use sampler identity because each sampler owns a seed/settings-specific noise graph. */
+    private static final class SampleKey {
+        private final Climate.Sampler sampler;
+        private final int x;
+        private final int z;
+
+        private SampleKey(Climate.Sampler sampler, int x, int z) {
+            this.sampler = sampler;
+            this.x = x;
+            this.z = z;
+        }
+
+        @Override public boolean equals(Object other) {
+            return other instanceof SampleKey key && sampler == key.sampler && x == key.x && z == key.z;
+        }
+
+        @Override public int hashCode() {
+            int result = System.identityHashCode(sampler);
+            result = 31 * result + x;
+            return 31 * result + z;
+        }
+    }
 }

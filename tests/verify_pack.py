@@ -109,7 +109,7 @@ for profile in ("oceanblock", "exploration"):
     allowed = read(f"magitema_ocean/tags/worldgen/placed_feature/{profile}.json")
     assert allowed["replace"] is True
     assert {"nautec:deep_kelp", "nautec:abyssal_coral", "nautec:prismarine_frond"}.issubset(allowed["values"])
-    assert {"minecraft:sea_pickle", "minecraft:warm_ocean_vegetation", "nautec:vent_field", "nautec:vent_tubeworm"}.issubset(allowed["values"])
+    assert {"minecraft:sea_pickle", "minecraft:warm_ocean_vegetation", "magitema_ocean:vent_cluster", "nautec:vent_tubeworm"}.issubset(allowed["values"])
     for biome in MARINE_BIOMES + (ISLAND_BIOMES if profile == "exploration" else ()):
         scoped = read(f"magitema_ocean/tags/worldgen/placed_feature/{profile}_{biome}.json")
         assert scoped["replace"] is False and isinstance(scoped["values"], list)
@@ -121,17 +121,31 @@ assert set(read("magitema_ocean/tags/worldgen/placed_feature/exploration_sandy_i
 assert {"minecraft:sea_pickle", "minecraft:warm_ocean_vegetation"}.issubset(
     set(read("magitema_ocean/tags/worldgen/placed_feature/oceanblock_coral_garden.json")["values"])
 )
-assert {"nautec:vent_field", "nautec:vent_tubeworm"}.issubset(
+edge_sensitive = set(read("magitema_ocean/tags/worldgen/placed_feature/chunk_edge_sensitive.json")["values"])
+edge_sensitive_large = set(read("magitema_ocean/tags/worldgen/placed_feature/chunk_edge_sensitive_large.json")["values"])
+assert {"minecraft:trees_sparse_jungle", "minecraft:warm_ocean_vegetation", "minecraft:sea_pickle"}.issubset(edge_sensitive)
+assert {"minecraft:patch_grass_jungle", "minecraft:sea_pickle", "nautec:prismarine_sand_ocean"}.issubset(edge_sensitive_large)
+assert {"magitema_ocean:vent_cluster", "nautec:vent_tubeworm"}.issubset(
     set(read("magitema_ocean/tags/worldgen/placed_feature/oceanblock_hadal_trench.json")["values"])
 )
+assert read("magitema_ocean/worldgen/placed_feature/vent_cluster.json")["feature"] == "magitema_ocean:vent_cluster"
+assert read("magitema_ocean/worldgen/configured_feature/vent_cluster.json")["type"] == "magitema_ocean:vent_cluster"
+vent_feature = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanVentClusterFeature.java").read_text(encoding="utf-8")
+assert "NAUTEC_VENT" in vent_feature and "distanceSquared > 4" in vent_feature
 decoration = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanDecoration.java").read_text(encoding="utf-8")
 marine_source = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/MarineBiomes.java").read_text(encoding="utf-8")
 assert "h.value().placeWithBiomeCheck(level,generator,random" in decoration and 'biome.equals("kelp_grove")' in decoration
+assert "features.sort(Comparator.comparing" in decoration and "forChunk(cp,candidateMargin)" in decoration
 biome_filter = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/mixin/OceanPlacedFeatureBiomeFilterMixin.java").read_text(encoding="utf-8")
-assert '"surface_biomes"' in biome_filter and 'profile + "_" + path' in biome_filter
-assert "cir.setReturnValue(!scoped || matches)" in biome_filter
+assert "OceanFeatureScopes.allowsInBiome" in biome_filter
+feature_scopes = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanFeatureScopes.java").read_text(encoding="utf-8")
+assert '"surface_biomes"' in feature_scopes and 'profile + "_" + path' in feature_scopes
+assert "return !scoped || matches" in feature_scopes
+assert "OceanFeaturePlacementBoundsMixin" in (ROOT / "src/main/resources/magitema_ocean.mixins.json").read_text(encoding="utf-8")
 assert "floor > 63" in marine_source and "floor >= 78" in marine_source
-assert "size() > 8192" in marine_source
+assert "ConcurrentHashMap" in marine_source
+assert "putBounded(surfaceChoices, key, computed, 8192)" in marine_source
+assert "putBounded(floorSamples, key, computed, 32768)" in marine_source
 assert "OceanPlacedFeatureBiomeFilterMixin" in (ROOT / "src/main/resources/magitema_ocean.mixins.json").read_text(encoding="utf-8")
 mapping = read("nautec/data_maps/block/bacteria_obtaining.json")
 assert mapping["replace"] is False

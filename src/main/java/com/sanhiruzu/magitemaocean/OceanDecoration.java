@@ -34,14 +34,21 @@ public final class OceanDecoration {
   growKelp(level,chunk,random);
   var registry=level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
   var tag=TagKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,profile));
+  var chunkEdgeSensitive=TagKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,"chunk_edge_sensitive"));
+  var chunkEdgeSensitiveLarge=TagKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,"chunk_edge_sensitive_large"));
   if(profile.equals("exploration")) OceanOreVein.generate(level,chunk,random);
-  try (var scope=OceanFeatureWriteScope.forChunk(cp)) {
-   for(Holder<PlacedFeature> h:registry.getTagOrEmpty(tag)) {
+  var features=new ArrayList<Holder<PlacedFeature>>();
+  registry.getTagOrEmpty(tag).forEach(features::add);
+  // Registry tag holders are sets; stable ordering keeps overlapping decoration reproducible.
+  features.sort(Comparator.comparing(h->h.unwrapKey().map(key->key.location().toString()).orElse("")));
+  for(Holder<PlacedFeature> h:features) {
+   int candidateMargin=h.is(chunkEdgeSensitiveLarge)?7:h.is(chunkEdgeSensitive)?6:0;
+   try (var scope=OceanFeatureWriteScope.forChunk(cp,candidateMargin)) {
     random.setSeed(level.getSeed()^(cp.x*341873128712L)^(cp.z*132897987541L)^h.unwrapKey().map(key->key.location().toString().hashCode()).orElse(0));
-   if(h.unwrapKey().map(key->key.location().equals(ResourceLocation.withDefaultNamespace("seagrass_deep"))).orElse(false)) {
-    growDeepSeagrass(level,chunk,random,profile,h);
-    continue;
-   }
+    if(h.unwrapKey().map(key->key.location().equals(ResourceLocation.withDefaultNamespace("seagrass_deep"))).orElse(false)) {
+     growDeepSeagrass(level,chunk,random,profile,h);
+     continue;
+    }
     h.value().placeWithBiomeCheck(level,generator,random,new BlockPos(cp.getMinBlockX(),level.getSeaLevel(),cp.getMinBlockZ()));
    }
   }

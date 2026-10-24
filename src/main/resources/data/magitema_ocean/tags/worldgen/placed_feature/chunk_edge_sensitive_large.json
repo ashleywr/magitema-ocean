@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:patch_grass_jungle",
+    "minecraft:sea_pickle",
+    "nautec:prismarine_sand_ocean"
+  ]
+}
