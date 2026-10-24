@@ -15,6 +15,8 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 /** Biome regions follow the exact seeded floor field used by the terrain generator. */
 public final class MarineBiomes extends BiomeSource {
     private static final int MARINE_BIOMES = 10;
+    private static final int ISLAND_BIOMES = 4;
+    private static final int CAVE_BIOMES = MARINE_BIOMES + ISLAND_BIOMES;
     private static final int HADAL_TRENCH = 0;
     private static final int ABYSSAL_BASIN = 1;
     private static final int BASALT_RIDGE = 2;
@@ -25,6 +27,10 @@ public final class MarineBiomes extends BiomeSource {
     private static final int KELP_GROVE = 7;
     private static final int CORAL_GARDEN = 8;
     private static final int SHELTERED_LAGOON = 9;
+    private static final int SANDY_ISLAND = 10;
+    private static final int JUNGLE_ISLAND = 11;
+    private static final int EXPOSED_CLIFF = 12;
+    private static final int VOLCANIC_ISLAND = 13;
 
     public static final MapCodec<MarineBiomes> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Biome.CODEC.listOf().fieldOf("biomes").forGetter(b -> b.biomes)
@@ -40,8 +46,8 @@ public final class MarineBiomes extends BiomeSource {
     );
 
     public MarineBiomes(List<Holder<Biome>> biomes) {
-        if (biomes.size() != MARINE_BIOMES + 2) {
-            throw new IllegalArgumentException("Marine biome palette requires ten marine and two cave entries");
+        if (biomes.size() != CAVE_BIOMES + 2) {
+            throw new IllegalArgumentException("Marine biome palette requires ten marine, four island and two cave entries");
         }
         this.biomes = List.copyOf(biomes);
     }
@@ -58,7 +64,7 @@ public final class MarineBiomes extends BiomeSource {
 
         // The two cave biomes occupy rock well below the actual floor, independent of absolute Y.
         if (burial > 48) {
-            return biomes.get(MARINE_BIOMES + (sampler.humidity().compute(center) > 0.1 ? 1 : 0));
+            return biomes.get(CAVE_BIOMES + (sampler.humidity().compute(center) > 0.1 ? 1 : 0));
         }
 
         return biomes.get(choice.biome());
@@ -83,10 +89,16 @@ public final class MarineBiomes extends BiomeSource {
         double warmth = sampler.temperature().compute(center);
         double humidity = sampler.humidity().compute(center);
 
-        // Deep classes are gated by floor elevation first; steep walls then distinguish ridges
-        // and volcanic/seamount flanks from the surrounding abyssal and rocky plains.
+        // Land exists only in the Exploration floor field. Relief and climate distinguish
+        // humid jungle, high volcanic summits, bare cliffs and sandy atolls.
         int biome;
-        if (floor <= -485) biome = HADAL_TRENCH;
+        if (floor > 63) {
+            if (floor >= 78) biome = VOLCANIC_ISLAND;
+            else if (slope >= 18) biome = EXPOSED_CLIFF;
+            else if (warmth > 0.08 && humidity > 0.1) biome = JUNGLE_ISLAND;
+            else biome = SANDY_ISLAND;
+        }
+        else if (floor <= -485) biome = HADAL_TRENCH;
         else if (floor <= -385) biome = ABYSSAL_BASIN;
         else if (floor <= -155) {
             if (slope >= 42 && floor > -335) biome = BASALT_RIDGE;

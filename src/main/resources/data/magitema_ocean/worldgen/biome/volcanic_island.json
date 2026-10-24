@@ -1,0 +1,38 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.9,
+  "downfall": 0.25,
+  "effects": {
+    "fog_color": 12900830,
+    "sky_color": 2181215,
+    "water_color": 7498076,
+    "water_fog_color": 5327426
+  },
+  "carvers": {},
+  "features": [],
+  "spawners": {
+    "creature": [
+      {
+        "type": "minecraft:goat",
+        "weight": 8,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:chicken",
+        "weight": 3,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "monster": [
+      {
+        "type": "minecraft:drowned",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
+  "spawn_costs": {}
+}

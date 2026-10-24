@@ -3,6 +3,10 @@
   "values": [
     "#magitema_ocean:marine",
     "magitema_ocean:stone_caves",
-    "magitema_ocean:living_caves"
+    "magitema_ocean:living_caves",
+    "magitema_ocean:sandy_island",
+    "magitema_ocean:jungle_island",
+    "magitema_ocean:exposed_cliff",
+    "magitema_ocean:volcanic_island"
   ]
 }

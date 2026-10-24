@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:trees_sparse_jungle",
+    "minecraft:patch_grass_jungle"
+  ]
+}
