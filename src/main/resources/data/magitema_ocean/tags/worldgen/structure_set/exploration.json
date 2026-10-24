@@ -1,6 +1,9 @@
 {
   "replace": true,
   "values": [
-    "magitema_ocean:deep_salvage_exploration"
+    "magitema_ocean:deep_salvage_exploration",
+    "nautec:crystal_geodes",
+    "nautec:research_outposts",
+    "nautec:ruins_1"
   ]
 }

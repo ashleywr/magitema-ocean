@@ -44,7 +44,11 @@ for name, island_policy in (("oceanblock", False), ("exploration", True)):
     assert floor_biomes["magitema_ocean:basalt_ridge"] == "minecraft:basalt"
     assert floor_biomes["magitema_ocean:sand_shelf"] == "minecraft:sand"
     tag = read(f"magitema_ocean/tags/worldgen/structure_set/{name}.json")
-    assert tag["replace"] is True and tag["values"] == [f"magitema_ocean:deep_salvage_{name}"]
+    assert tag["replace"] is True
+    assert set(tag["values"]) == {
+        f"magitema_ocean:deep_salvage_{name}",
+        "nautec:crystal_geodes", "nautec:research_outposts", "nautec:ruins_1",
+    }
     structure_set = read(ns + f"structure_set/deep_salvage_{name}.json")
     assert structure_set["structures"] == [{"structure": "magitema_ocean:deep_salvage", "weight": 1}]
     assert structure_set["placement"]["type"] == "minecraft:random_spread"
