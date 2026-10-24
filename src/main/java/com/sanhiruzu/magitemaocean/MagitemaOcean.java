@@ -23,7 +23,7 @@ public final class MagitemaOcean {
  public static final net.neoforged.neoforge.registries.DeferredHolder<StructureType<?>,StructureType<OceanSalvageStructure>> SALVAGE_STRUCTURE=STRUCTURE_TYPES.register("deep_salvage",()->()->OceanSalvageStructure.CODEC);
  public static final net.neoforged.neoforge.registries.DeferredHolder<StructurePieceType,StructurePieceType.ContextlessType> SALVAGE_PIECE=STRUCTURE_PIECES.register("deep_salvage",()->OceanSalvagePiece::new);
  public MagitemaOcean(IEventBus bus) {
-  DENSITIES.register("floor",()->OceanFloor.CODEC.codec());DENSITIES.register("terrain",()->OceanTerrain.CODEC.codec());
+  DENSITIES.register("floor",()->OceanFloor.CODEC.codec());DENSITIES.register("terrain",()->OceanTerrain.CODEC.codec());DENSITIES.register("safe_ceiling",()->OceanSafeCeiling.CODEC.codec());
   BIOMES.register("marine",()->MarineBiomes.CODEC);
   DENSITIES.register(bus);BIOMES.register(bus);STRUCTURE_TYPES.register(bus);STRUCTURE_PIECES.register(bus);
   NeoForge.EVENT_BUS.register(new OceanLifecycle());

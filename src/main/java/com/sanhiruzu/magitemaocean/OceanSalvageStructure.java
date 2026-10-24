@@ -2,7 +2,6 @@ package com.sanhiruzu.magitemaocean;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStructure;
@@ -14,11 +13,12 @@ public final class OceanSalvageStructure extends Structure {
  public OceanSalvageStructure(Structure.StructureSettings settings){super(settings);}
  @Override public Optional<GenerationStub> findGenerationPoint(GenerationContext c) {
   ChunkPos chunk=c.chunkPos(); int x=chunk.getMiddleBlockX(),z=chunk.getMiddleBlockZ();
-  int floor=c.chunkGenerator().getFirstOccupiedHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,c.heightAccessor(),c.randomState())-1;
+  var floorField=OceanWorld.floorFunction(c.randomState());
+  int floor=OceanWorld.floorBlockAt(floorField,x,z);
   if(floor > -120 || floor < -600) return Optional.empty();
   int min=floor,max=floor;
   for(int dx=-6;dx<=6;dx+=3) for(int dz=-6;dz<=6;dz+=3) {
-   int h=c.chunkGenerator().getFirstOccupiedHeight(x+dx,z+dz,Heightmap.Types.OCEAN_FLOOR_WG,c.heightAccessor(),c.randomState())-1;
+   int h=OceanWorld.floorBlockAt(floorField,x+dx,z+dz);
    min=Math.min(min,h);max=Math.max(max,h);
   }
   if(max-min>22 || min-52<c.heightAccessor().getMinBuildHeight()+16) return Optional.empty();

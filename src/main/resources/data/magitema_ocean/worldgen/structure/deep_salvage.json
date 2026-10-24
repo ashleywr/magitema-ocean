@@ -1,6 +1,6 @@
 {
   "type": "magitema_ocean:deep_salvage",
-  "biomes": "#magitema_ocean:marine",
+  "biomes": "#magitema_ocean:salvage_biomes",
   "step": "underground_decoration",
   "terrain_adaptation": "bury",
   "spawn_overrides": {}
