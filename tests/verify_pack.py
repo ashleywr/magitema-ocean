@@ -82,10 +82,17 @@ channels = read("magitema_ocean/worldgen/noise/channels.json")
 assert channels["firstOctave"] == -11
 ore_outputs = read("magitema_ocean/tags/block/exploration_ores.json")
 ore_hosts = read("magitema_ocean/tags/block/exploration_ore_hosts.json")
+ore_exclusions = read("magitema_ocean/tags/block/exploration_ore_exclusions.json")
 assert ore_outputs["replace"] is False and "minecraft:diamond_ore" in ore_outputs["values"]
 assert ore_outputs["replace"] is False and "minecraft:deepslate_emerald_ore" in ore_outputs["values"]
 assert {"create:zinc_ore", "magitech:fluorite_ore", "magitech:tourmaline_ore", "zps:lithium_ore"}.issubset(ore_outputs["values"])
+assert {"id": "#c:ores", "required": False} in ore_outputs["values"]
+assert ore_exclusions["replace"] is False
+assert {"minecraft:ancient_debris", "minecraft:nether_gold_ore", "minecraft:nether_quartz_ore"}.issubset(ore_exclusions["values"])
+assert {"createreautomated:copper_node", "createreautomated:nether_quartz_node"}.issubset(ore_exclusions["values"])
 assert ore_hosts["replace"] is False and set(ore_hosts["values"]) == {"minecraft:stone", "minecraft:deepslate"}
+ore_source = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanOreVein.java").read_text(encoding="utf-8")
+assert "EXCLUDED_ORES" in ore_source and "holder.is(EXCLUDED_ORES)" in ore_source
 for profile in ("oceanblock", "exploration"):
     allowed = read(f"magitema_ocean/tags/worldgen/placed_feature/{profile}.json")
     assert allowed["replace"] is True

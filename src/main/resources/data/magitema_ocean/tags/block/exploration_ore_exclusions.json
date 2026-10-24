@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:ancient_debris",
+    "minecraft:nether_gold_ore",
+    "minecraft:nether_quartz_ore",
+    "eternal_starlight:thermal_springstone",
+    "createreautomated:ancient_debris_node",
+    "createreautomated:copper_node",
+    "createreautomated:deepslate_copper_node",
+    "createreautomated:deepslate_diamond_node",
+    "createreautomated:deepslate_gold_node",
+    "createreautomated:deepslate_iron_node",
+    "createreautomated:deepslate_zinc_node",
+    "createreautomated:diamond_node",
+    "createreautomated:gold_node",
+    "createreautomated:iron_node",
+    "createreautomated:nether_gold_node",
+    "createreautomated:nether_quartz_node",
+    "createreautomated:zinc_node",
+    "scguns:nether_sulfur_ore"
+  ]
+}

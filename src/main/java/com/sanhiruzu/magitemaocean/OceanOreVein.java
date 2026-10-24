@@ -16,10 +16,14 @@ import net.minecraft.world.level.levelgen.Heightmap;
 public final class OceanOreVein {
  private OceanOreVein() {}
  private static final TagKey<Block> ORES=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,"exploration_ores"));
+ private static final TagKey<Block> EXCLUDED_ORES=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,"exploration_ore_exclusions"));
  private static final TagKey<Block> HOSTS=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,"exploration_ore_hosts"));
  public static void generate(WorldGenLevel level,ChunkAccess chunk,RandomSource random) {
   List<BlockState> ores=new ArrayList<>();
-  for(var holder:level.registryAccess().registryOrThrow(Registries.BLOCK).getTagOrEmpty(ORES)) ores.add(holder.value().defaultBlockState());
+  var blocks=level.registryAccess().registryOrThrow(Registries.BLOCK);
+  for(var holder:blocks.getTagOrEmpty(ORES)) {
+   if(!holder.is(EXCLUDED_ORES)) ores.add(holder.value().defaultBlockState());
+  }
   if(ores.isEmpty()) return;
   int cx=chunk.getPos().getMinBlockX(),cz=chunk.getPos().getMinBlockZ();
   for(int vein=0;vein<8;vein++) {
