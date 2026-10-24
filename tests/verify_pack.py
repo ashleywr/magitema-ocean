@@ -28,7 +28,10 @@ for name, island_policy in (("oceanblock", False), ("exploration", True)):
     palette = overworld["generator"]["biome_source"]["biomes"]
     expected_palette = [f"magitema_ocean:{name}" for name in MARINE_BIOMES]
     expected_palette += [f"magitema_ocean:{name}" for name in ISLAND_BIOMES]
-    expected_palette += ["magitema_ocean:stone_caves", "magitema_ocean:living_caves"]
+    expected_palette += [
+        "magitema_ocean:stone_caves", "magitema_ocean:living_caves",
+        "minecraft:dripstone_caves", "minecraft:lush_caves", "minecraft:deep_dark",
+    ]
     assert palette == expected_palette
     settings = read(ns + f"noise_settings/{name}.json")
     assert settings["noise"] == {"min_y": -704, "height": 1024, "size_horizontal": 1, "size_vertical": 2}
@@ -59,6 +62,14 @@ for name, island_policy in (("oceanblock", False), ("exploration", True)):
 
 assert profiles["oceanblock"]["noise_router"]["continents"]["islands"] is False
 assert profiles["exploration"]["noise_router"]["continents"]["islands"] is True
+marine_source = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/MarineBiomes.java").read_text(encoding="utf-8")
+assert all(name in marine_source for name in ("DRIPSTONE_CAVES", "LUSH_CAVES", "DEEP_DARK"))
+assert "if (burial > 48)" in marine_source
+cave_decoration = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanCaveDecoration.java").read_text(encoding="utf-8")
+assert all(name in cave_decoration for name in ("DRIPSTONE", "LUSH", "DEEP_DARK"))
+assert all(name in cave_decoration for name in ("MOSS_BLOCK", "POINTED_DRIPSTONE", "SCULK"))
+assert "seabed - 49" in cave_decoration and "seabed - 192" in cave_decoration and "y -= 4" in cave_decoration
+assert "BlockTags.BASE_STONE_OVERWORLD" in cave_decoration
 marine_tag = read("magitema_ocean/tags/worldgen/biome/marine.json")
 assert set(marine_tag["values"]) == {f"magitema_ocean:{name}" for name in MARINE_BIOMES}
 marine_ids = set(marine_tag["values"])
@@ -156,4 +167,4 @@ assert {item["item"] for item in iron["ingredients"]} == {"minecraft:gravel", "m
 assert iron["result"]["id"] == "minecraft:iron_nugget"
 for p in (DATA / "magitema_ocean").rglob("*.json"):
     json.loads(p.read_text(encoding="utf-8"))
-print("PASS: both actual Overworld presets, ten marine and four island biomes, ocean/deep-ocean and NauTec tags, biome-scoped surface/feature policies, expanded bounds, profile rules, and all JSON parse.")
+print("PASS: both Overworld presets, ten marine/four island/five cave biome palette, cave habitat decoration, ocean/NauTec tags, profile rules, and all JSON parse.")

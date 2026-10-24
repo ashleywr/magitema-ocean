@@ -52,6 +52,7 @@ public final class OceanDecoration {
     h.value().placeWithBiomeCheck(level,generator,random,new BlockPos(cp.getMinBlockX(),level.getSeaLevel(),cp.getMinBlockZ()));
    }
   }
+  OceanCaveDecoration.decorate(level,cp.x,cp.z,random);
  }
  private static void growDeepSeagrass(WorldGenLevel level,ChunkAccess chunk,RandomSource random,String profile,Holder<PlacedFeature> feature) {
   int baseX=chunk.getPos().getMinBlockX(),baseZ=chunk.getPos().getMinBlockZ();

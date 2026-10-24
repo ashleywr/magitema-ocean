@@ -16,7 +16,6 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 public final class MarineBiomes extends BiomeSource {
     private static final int MARINE_BIOMES = 10;
     private static final int ISLAND_BIOMES = 4;
-    private static final int CAVE_BIOMES = MARINE_BIOMES + ISLAND_BIOMES;
     private static final int HADAL_TRENCH = 0;
     private static final int ABYSSAL_BASIN = 1;
     private static final int BASALT_RIDGE = 2;
@@ -31,6 +30,12 @@ public final class MarineBiomes extends BiomeSource {
     private static final int JUNGLE_ISLAND = 11;
     private static final int EXPOSED_CLIFF = 12;
     private static final int VOLCANIC_ISLAND = 13;
+    private static final int STONE_CAVES = 14;
+    private static final int LIVING_CAVES = 15;
+    private static final int DRIPSTONE_CAVES = 16;
+    private static final int LUSH_CAVES = 17;
+    private static final int DEEP_DARK = 18;
+    private static final int BIOME_PALETTE_SIZE = 19;
 
     public static final MapCodec<MarineBiomes> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Biome.CODEC.listOf().fieldOf("biomes").forGetter(b -> b.biomes)
@@ -41,8 +46,8 @@ public final class MarineBiomes extends BiomeSource {
     private final ConcurrentMap<SampleKey, Double> floorSamples = new ConcurrentHashMap<>();
 
     public MarineBiomes(List<Holder<Biome>> biomes) {
-        if (biomes.size() != CAVE_BIOMES + 2) {
-            throw new IllegalArgumentException("Marine biome palette requires ten marine, four island and two cave entries");
+        if (biomes.size() != BIOME_PALETTE_SIZE || BIOME_PALETTE_SIZE != MARINE_BIOMES + ISLAND_BIOMES + 5) {
+            throw new IllegalArgumentException("Marine biome palette requires ten marine, four island and five cave entries");
         }
         this.biomes = List.copyOf(biomes);
     }
@@ -57,9 +62,14 @@ public final class MarineBiomes extends BiomeSource {
         double floor = choice.floor();
         double burial = floor - y * 4.0;
 
-        // The two cave biomes occupy rock well below the actual floor, independent of absolute Y.
+        // Cave habitat selection stays below a floor-relative sealed roof. Depth and the
+        // seed-specific climate fields divide this underground volume into distinct regions.
         if (burial > 48) {
-            return biomes.get(CAVE_BIOMES + (sampler.humidity().compute(center) > 0.1 ? 1 : 0));
+            int blockY = y * 4;
+            if (blockY < -192 && burial > 160 && choice.humidity() < -0.3) return biomes.get(DEEP_DARK);
+            if (choice.humidity() > 0.45) return biomes.get(LUSH_CAVES);
+            if (choice.warmth() > 0.2 && choice.humidity() < 0.35) return biomes.get(DRIPSTONE_CAVES);
+            return biomes.get(choice.humidity() > 0.1 ? LIVING_CAVES : STONE_CAVES);
         }
 
         return biomes.get(choice.biome());
@@ -109,7 +119,7 @@ public final class MarineBiomes extends BiomeSource {
         } else {
             biome = SAND_SHELF;
         }
-        SurfaceChoice computed = new SurfaceChoice(floor, biome);
+        SurfaceChoice computed = new SurfaceChoice(floor, biome, warmth, humidity);
         return putBounded(surfaceChoices, key, computed, 8192);
     }
 
@@ -136,7 +146,7 @@ public final class MarineBiomes extends BiomeSource {
         return new DensityFunction.SinglePointContext(x * 4, y * 4, z * 4);
     }
 
-    private record SurfaceChoice(double floor, int biome) {}
+    private record SurfaceChoice(double floor, int biome, double warmth, double humidity) {}
 
     /** Sample keys use sampler identity because each sampler owns a seed/settings-specific noise graph. */
     private static final class SampleKey {

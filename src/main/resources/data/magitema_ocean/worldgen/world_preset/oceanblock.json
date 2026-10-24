@@ -23,7 +23,10 @@
             "magitema_ocean:exposed_cliff",
             "magitema_ocean:volcanic_island",
             "magitema_ocean:stone_caves",
-            "magitema_ocean:living_caves"
+            "magitema_ocean:living_caves",
+            "minecraft:dripstone_caves",
+            "minecraft:lush_caves",
+            "minecraft:deep_dark"
           ]
         }
       }
