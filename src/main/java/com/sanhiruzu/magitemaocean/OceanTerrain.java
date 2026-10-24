@@ -31,7 +31,9 @@ public record OceanTerrain(DensityFunction floor, DensityFunction safeCeiling,
         return min-ROOF-24;
     }
     @Override public double compute(FunctionContext c) {
-        double f = floorAt(floor, c.blockX(), c.blockZ());
+        // The preset wraps this y-independent field in cache_2d. Keep the original
+        // NoiseChunk context here so that cache can reuse one floor value per column.
+        double f = floor.compute(c);
         double rock = f-c.blockY();
         if (rock < 24 || c.blockY() < -660) return rock;
         double cavity = Math.max(0.105-Math.abs(tunnels.compute(c)), caves.compute(c)-0.38);

@@ -70,32 +70,35 @@
     "initial_density_without_jaggedness": {
       "type": "magitema_ocean:terrain",
       "floor": {
-        "type": "magitema_ocean:floor",
-        "geography": {
-          "type": "minecraft:noise",
-          "noise": "magitema_ocean:geography",
-          "xz_scale": 1,
-          "y_scale": 0
-        },
-        "ridges": {
-          "type": "minecraft:noise",
-          "noise": "magitema_ocean:ridges",
-          "xz_scale": 1,
-          "y_scale": 0
-        },
-        "channels": {
-          "type": "minecraft:noise",
-          "noise": "magitema_ocean:channels",
-          "xz_scale": 1,
-          "y_scale": 0
-        },
-        "detail": {
-          "type": "minecraft:noise",
-          "noise": "magitema_ocean:detail",
-          "xz_scale": 1,
-          "y_scale": 0
-        },
-        "islands": false
+        "type": "minecraft:cache_2d",
+        "argument": {
+          "type": "magitema_ocean:floor",
+          "geography": {
+            "type": "minecraft:noise",
+            "noise": "magitema_ocean:geography",
+            "xz_scale": 1,
+            "y_scale": 0
+          },
+          "ridges": {
+            "type": "minecraft:noise",
+            "noise": "magitema_ocean:ridges",
+            "xz_scale": 1,
+            "y_scale": 0
+          },
+          "channels": {
+            "type": "minecraft:noise",
+            "noise": "magitema_ocean:channels",
+            "xz_scale": 1,
+            "y_scale": 0
+          },
+          "detail": {
+            "type": "minecraft:noise",
+            "noise": "magitema_ocean:detail",
+            "xz_scale": 1,
+            "y_scale": 0
+          },
+          "islands": false
+        }
       },
       "caves": {
         "type": "minecraft:noise",
@@ -149,32 +152,35 @@
       "argument": {
         "type": "magitema_ocean:terrain",
         "floor": {
-          "type": "magitema_ocean:floor",
-          "geography": {
-            "type": "minecraft:noise",
-            "noise": "magitema_ocean:geography",
-            "xz_scale": 1,
-            "y_scale": 0
-          },
-          "ridges": {
-            "type": "minecraft:noise",
-            "noise": "magitema_ocean:ridges",
-            "xz_scale": 1,
-            "y_scale": 0
-          },
-          "channels": {
-            "type": "minecraft:noise",
-            "noise": "magitema_ocean:channels",
-            "xz_scale": 1,
-            "y_scale": 0
-          },
-          "detail": {
-            "type": "minecraft:noise",
-            "noise": "magitema_ocean:detail",
-            "xz_scale": 1,
-            "y_scale": 0
-          },
-          "islands": false
+          "type": "minecraft:cache_2d",
+          "argument": {
+            "type": "magitema_ocean:floor",
+            "geography": {
+              "type": "minecraft:noise",
+              "noise": "magitema_ocean:geography",
+              "xz_scale": 1,
+              "y_scale": 0
+            },
+            "ridges": {
+              "type": "minecraft:noise",
+              "noise": "magitema_ocean:ridges",
+              "xz_scale": 1,
+              "y_scale": 0
+            },
+            "channels": {
+              "type": "minecraft:noise",
+              "noise": "magitema_ocean:channels",
+              "xz_scale": 1,
+              "y_scale": 0
+            },
+            "detail": {
+              "type": "minecraft:noise",
+              "noise": "magitema_ocean:detail",
+              "xz_scale": 1,
+              "y_scale": 0
+            },
+            "islands": false
+          }
         },
         "caves": {
           "type": "minecraft:noise",
