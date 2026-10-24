@@ -7,7 +7,8 @@
     "NoiseChunkMixin",
     "NoiseGeneratorMixin",
     "ChunkGeneratorMixin",
-    "OceanPlacedFeatureBiomeFilterMixin"
+    "OceanPlacedFeatureBiomeFilterMixin",
+    "OceanFeatureWriteBoundaryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

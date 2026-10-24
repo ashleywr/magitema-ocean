@@ -7,7 +7,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TallSeagrassBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.chunk.*;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -31,9 +35,36 @@ public final class OceanDecoration {
   var registry=level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
   var tag=TagKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID,profile));
   if(profile.equals("exploration")) OceanOreVein.generate(level,chunk,random);
-  for(Holder<PlacedFeature> h:registry.getTagOrEmpty(tag)) {
-   random.setSeed(level.getSeed()^(cp.x*341873128712L)^(cp.z*132897987541L)^h.unwrapKey().map(key->key.location().toString().hashCode()).orElse(0));
-   h.value().placeWithBiomeCheck(level,generator,random,new BlockPos(cp.getMinBlockX(),level.getSeaLevel(),cp.getMinBlockZ()));
+  try (var scope=OceanFeatureWriteScope.forChunk(cp)) {
+   for(Holder<PlacedFeature> h:registry.getTagOrEmpty(tag)) {
+    random.setSeed(level.getSeed()^(cp.x*341873128712L)^(cp.z*132897987541L)^h.unwrapKey().map(key->key.location().toString().hashCode()).orElse(0));
+   if(h.unwrapKey().map(key->key.location().equals(ResourceLocation.withDefaultNamespace("seagrass_deep"))).orElse(false)) {
+    growDeepSeagrass(level,chunk,random,profile,h);
+    continue;
+   }
+    h.value().placeWithBiomeCheck(level,generator,random,new BlockPos(cp.getMinBlockX(),level.getSeaLevel(),cp.getMinBlockZ()));
+   }
+  }
+ }
+ private static void growDeepSeagrass(WorldGenLevel level,ChunkAccess chunk,RandomSource random,String profile,Holder<PlacedFeature> feature) {
+  int baseX=chunk.getPos().getMinBlockX(),baseZ=chunk.getPos().getMinBlockZ();
+  for(int attempt=0;attempt<48;attempt++) {
+   int x=baseX+random.nextInt(16),z=baseZ+random.nextInt(16);
+   BlockPos pos=new BlockPos(x,level.getHeight(Heightmap.Types.OCEAN_FLOOR,x,z),z);
+   if(!OceanFeatureScopes.allowsInBiome(level,profile,feature,level.getBiome(pos))) continue;
+   if(!level.getBlockState(pos).is(Blocks.WATER)) continue;
+
+   boolean tall=random.nextDouble()<0.8D;
+   BlockState state=tall?Blocks.TALL_SEAGRASS.defaultBlockState().setValue(TallSeagrassBlock.HALF,DoubleBlockHalf.LOWER):Blocks.SEAGRASS.defaultBlockState();
+   if(!state.canSurvive(level,pos)) continue;
+   if(tall) {
+    BlockPos upper=pos.above();
+    if(!level.getBlockState(upper).is(Blocks.WATER)) continue;
+    level.setBlock(pos,state,2);
+    level.setBlock(upper,state.setValue(TallSeagrassBlock.HALF,DoubleBlockHalf.UPPER),2);
+   } else {
+    level.setBlock(pos,state,2);
+   }
   }
  }
  private static void growKelp(WorldGenLevel level,ChunkAccess chunk,RandomSource random) {

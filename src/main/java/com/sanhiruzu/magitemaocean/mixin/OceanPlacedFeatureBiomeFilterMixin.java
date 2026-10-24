@@ -1,6 +1,7 @@
 package com.sanhiruzu.magitemaocean.mixin;
 
 import com.sanhiruzu.magitemaocean.MagitemaOcean;
+import com.sanhiruzu.magitemaocean.OceanFeatureScopes;
 import com.sanhiruzu.magitemaocean.OceanWorld;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -8,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
@@ -34,30 +36,7 @@ public abstract class OceanPlacedFeatureBiomeFilterMixin {
                 .flatMap(registry::getHolder).orElse(null);
         if (feature == null || !feature.is(allowed)) return;
 
-        String biomePath = context.getLevel().getBiome(position).unwrapKey()
-                .map(key -> key.location().getPath()).orElse("");
-        TagKey<net.minecraft.world.level.biome.Biome> surfaceBiomes = TagKey.create(Registries.BIOME,
-                ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID, "surface_biomes"));
-        boolean scoped = false;
-        boolean matches = false;
-        var biomes = context.getLevel().registryAccess().registryOrThrow(Registries.BIOME);
-        for (Holder<net.minecraft.world.level.biome.Biome> biome : biomes.getTagOrEmpty(surfaceBiomes)) {
-            String path = biome.unwrapKey().map(key -> key.location().getPath()).orElse("");
-            if (path.isEmpty()) continue;
-            TagKey<PlacedFeature> scope = TagKey.create(Registries.PLACED_FEATURE,
-                    ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID, profile + "_" + path));
-            boolean includesFeature = false;
-            for (Holder<PlacedFeature> scopedFeature : registry.getTagOrEmpty(scope)) {
-                if (scopedFeature.equals(feature)) {
-                    includesFeature = true;
-                    break;
-                }
-            }
-            if (includesFeature) {
-                scoped = true;
-                if (path.equals(biomePath)) matches = true;
-            }
-        }
-        cir.setReturnValue(!scoped || matches);
+        Holder<Biome> candidateBiome = context.getLevel().getBiome(position);
+        cir.setReturnValue(OceanFeatureScopes.allowsInBiome(context.getLevel(), profile, feature, candidateBiome));
     }
 }
