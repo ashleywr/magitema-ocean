@@ -126,9 +126,10 @@ assert {"nautec:vent_field", "nautec:vent_tubeworm"}.issubset(
 )
 decoration = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/OceanDecoration.java").read_text(encoding="utf-8")
 marine_source = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/MarineBiomes.java").read_text(encoding="utf-8")
-assert "placeWithBiomeCheck" in decoration and 'biome.equals("kelp_grove")' in decoration
-assert '"surface_biomes"' in decoration and "fitsSurfaceBiome" in decoration
-assert "placeIslandFeatures" in decoration and "feature.value().placeWithBiomeCheck" in decoration
+assert "h.value().placeWithBiomeCheck(level,generator,random" in decoration and 'biome.equals("kelp_grove")' in decoration
+biome_filter = (ROOT / "src/main/java/com/sanhiruzu/magitemaocean/mixin/OceanPlacedFeatureBiomeFilterMixin.java").read_text(encoding="utf-8")
+assert '"surface_biomes"' in biome_filter and 'profile + "_" + path' in biome_filter
+assert "cir.setReturnValue(!scoped || matches)" in biome_filter
 assert "floor > 63" in marine_source and "floor >= 78" in marine_source
 assert "size() > 8192" in marine_source
 assert "OceanPlacedFeatureBiomeFilterMixin" in (ROOT / "src/main/resources/magitema_ocean.mixins.json").read_text(encoding="utf-8")

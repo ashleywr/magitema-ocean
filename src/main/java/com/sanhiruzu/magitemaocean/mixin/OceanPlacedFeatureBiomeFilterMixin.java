@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Let only explicitly tagged marine features pass vanilla's biome feature-membership guard. */
+/** Let explicitly tagged placed features pass only in their scoped marine or island biomes. */
 @Mixin(BiomeFilter.class)
 public abstract class OceanPlacedFeatureBiomeFilterMixin {
     @Inject(method = "shouldPlace", at = @At("HEAD"), cancellable = true)
@@ -30,9 +30,34 @@ public abstract class OceanPlacedFeatureBiomeFilterMixin {
         TagKey<PlacedFeature> allowed = TagKey.create(Registries.PLACED_FEATURE,
                 ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID, profile));
         var registry = context.getLevel().registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
-        context.topFeature().flatMap(registry::getResourceKey)
-                .flatMap(registry::getHolder)
-                .filter(holder -> holder.is(allowed))
-                .ifPresent(holder -> cir.setReturnValue(true));
+        var feature = context.topFeature().flatMap(registry::getResourceKey)
+                .flatMap(registry::getHolder).orElse(null);
+        if (feature == null || !feature.is(allowed)) return;
+
+        String biomePath = context.getLevel().getBiome(position).unwrapKey()
+                .map(key -> key.location().getPath()).orElse("");
+        TagKey<net.minecraft.world.level.biome.Biome> surfaceBiomes = TagKey.create(Registries.BIOME,
+                ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID, "surface_biomes"));
+        boolean scoped = false;
+        boolean matches = false;
+        var biomes = context.getLevel().registryAccess().registryOrThrow(Registries.BIOME);
+        for (Holder<net.minecraft.world.level.biome.Biome> biome : biomes.getTagOrEmpty(surfaceBiomes)) {
+            String path = biome.unwrapKey().map(key -> key.location().getPath()).orElse("");
+            if (path.isEmpty()) continue;
+            TagKey<PlacedFeature> scope = TagKey.create(Registries.PLACED_FEATURE,
+                    ResourceLocation.fromNamespaceAndPath(MagitemaOcean.ID, profile + "_" + path));
+            boolean includesFeature = false;
+            for (Holder<PlacedFeature> scopedFeature : registry.getTagOrEmpty(scope)) {
+                if (scopedFeature.equals(feature)) {
+                    includesFeature = true;
+                    break;
+                }
+            }
+            if (includesFeature) {
+                scoped = true;
+                if (path.equals(biomePath)) matches = true;
+            }
+        }
+        cir.setReturnValue(!scoped || matches);
     }
 }
