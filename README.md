@@ -1,6 +1,6 @@
 # Magitema Ocean
 
-Original Minecraft 1.21.1 / NeoForge 21.1.262 world-generation prototype for Ashley's Magitema pack. It provides named `minecraft:overworld` presets, expanded depth, an ocean-only marine biome source, guarded dry caves, renewable kelp, sparse buried salvage rooms and a one-time shared spawn platform. It is not a formally source-isolated clean-room implementation; the prior research handoff is retained outside this repository.
+Original Minecraft 1.21.1 / NeoForge 21.1.262 world-generation prototype for my Magitema pack. It provides named `minecraft:overworld` presets, expanded depth, an ocean-only marine biome source, guarded dry caves, renewable kelp, sparse buried salvage rooms and a one-time shared spawn platform. It is not a formally source-isolated clean-room implementation; the prior research handoff is retained outside this repository.
 
 The source project is in `repo/`. Build with Java 21 using `gradlew.bat clean build`. The runtime mod is `build/libs/magitema-ocean-1.21.1-0.1.0.jar`; `build/distributions/magitema-ocean-data-0.1.0.zip` contains its datapack resources. The companion mod supplies the custom density, biome, structure and worldgen hooks, so the data ZIP alone cannot create these worlds.
 
@@ -52,9 +52,9 @@ The wrapper keeps test evidence, handoff notes, the mod-selection manifest and p
 
 <!-- ashley-release-information -->
 
-## Ashley's builds
+## My builds
 
-This is an original project by Ashley Wijnen-Riems. Original project code is offered under the [MIT License](LICENSE). Third-party material retains its own license and attribution.
+This is my original project. Original project code is offered under the [MIT License](LICENSE). Third-party material retains its own license and attribution.
 
 Provided **AS IS**, without warranty of any kind. Maintenance, updates and support are best effort; compatibility with every modpack is not guaranteed.
 
